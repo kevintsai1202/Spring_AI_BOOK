@@ -1,0 +1,129 @@
+spring:
+  application:
+    name: spring-ai-memory-enhancement
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 1500
+
+# 聊天記憶配置
+app:
+  chat:
+    memory:
+      type: jdbc  # memory, jdbc, redis, neo4j
+      max-messages: 200
+      expiration-hours: 48
+      compression-enabled: true
+      compression-threshold: 300
+
+# 應用程式配置
+server:
+  port: 8080
+
+# 開發環境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+app:
+  chat:
+    memory:
+      type: memory
+      max-messages: 50
+
+# 生產環境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:chatbot}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+app:
+  chat:
+    memory:
+      type: redis
+      max-messages: 500
+      expiration-hours: 72
+
+# 企業級配置
+---
+spring:
+  config:
+    activate:
+      on-profile: enterprise
+  neo4j:
+    uri: ${NEO4J_URI:bolt://localhost:7687}
+    authentication:
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PASSWORD}
+
+app:
+  chat:
+    memory:
+      type: neo4j
+      max-messages: 1000
+      expiration-hours: 168  # 7 days
+
+# 日誌配置
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    com.example: DEBUG
+    org.springframework.data: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 應用程式資訊
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Spring AI Memory Enhancement
+    description: Spring AI 記憶增強功能展示 - 對話記憶、記憶管理、效能優化
+    version: 1.0.0

@@ -1,0 +1,13 @@
+# 章節名稱定義檔
+# 格式: 章節編號=章節名稱
+
+0=序章
+1=第一章：Spring Boot 基礎
+2=第二章：Spring MVC 與 API 開發
+3=第三章：生產級 API 開發實踐
+4=第四章：Spring AI 的誕生與價值
+5=第五章：Spring AI 進階功能
+6=第六章：記憶與向量資料庫
+7=第七章：RAG 實作
+8=第八章：Advanced RAG
+9=第九章：MCP (Model Context Protocol)

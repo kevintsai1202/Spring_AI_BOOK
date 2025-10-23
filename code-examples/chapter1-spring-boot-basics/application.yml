@@ -1,0 +1,35 @@
+# 伺服器設定
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# Spring Boot 應用程式設定
+spring:
+  application:
+    name: User Management System
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+# 日誌設定
+logging:
+  level:
+    com.example.demo: DEBUG
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 應用程式資訊
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: User Management System
+    description: 使用者管理系統 - 展示 DTO 模式和 API 安全性
+    version: 1.0.0

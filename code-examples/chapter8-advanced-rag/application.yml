@@ -1,0 +1,235 @@
+spring:
+  application:
+    name: advanced-rag-system
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.3
+          max-tokens: 2000
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+    
+    # Re-ranking 專用嵌入模型
+    reranking:
+      embedding:
+        options:
+          model: text-embedding-3-large
+          dimensions: 3072
+    
+    vectorstore:
+      neo4j:
+        uri: ${NEO4J_URI:bolt://localhost:7687}
+        username: ${NEO4J_USERNAME:neo4j}
+        password: ${NEO4J_PASSWORD}
+        database: ${NEO4J_DATABASE:neo4j}
+        embedding-dimension: 1536
+        distance-type: COSINE
+        index-name: advanced-rag-embeddings
+
+# 應用程式配置
+server:
+  port: 8080
+
+# Advanced RAG 配置
+app:
+  advanced-rag:
+    # 查詢處理配置
+    query-processing:
+      enable-rewriting: true
+      enable-expansion: true
+      enable-intent-classification: true
+      max-query-length: 1000
+    
+    # 多階段檢索配置
+    retrieval:
+      coarse-retrieval:
+        top-k: 50
+        similarity-threshold: 0.6
+      fine-retrieval:
+        top-k: 20
+        similarity-threshold: 0.7
+      reranking:
+        enabled: true
+        final-top-k: 5
+        semantic-weight: 0.5
+        length-weight: 0.2
+        keyword-weight: 0.2
+        metadata-weight: 0.1
+    
+    # 上下文管理配置
+    context:
+      max-context-length: 8000
+      enable-compression: true
+      compression-ratio: 0.7
+      enable-deduplication: true
+    
+    # 品質控制配置
+    quality:
+      min-confidence-score: 0.7
+      enable-fact-checking: true
+      enable-relevance-scoring: true
+      enable-coherence-check: true
+    
+    # 效能配置
+    performance:
+      enable-caching: true
+      cache-ttl: 1h
+      max-concurrent-requests: 20
+      request-timeout: 30s
+      enable-metrics: true
+
+# 資料庫配置
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:advancedrag}
+    username: ${DB_USERNAME:raguser}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Redis 配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+# 監控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        advanced.rag.query.duration: true
+        advanced.rag.retrieval.duration: true
+        advanced.rag.reranking.duration: true
+
+# 日誌配置
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    com.example: DEBUG
+    org.neo4j: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/advanced-rag.log
+    max-size: 100MB
+    max-history: 30
+
+# 開發環境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+app:
+  advanced-rag:
+    retrieval:
+      coarse-retrieval:
+        top-k: 20
+      fine-retrieval:
+        top-k: 10
+      reranking:
+        final-top-k: 3
+    performance:
+      max-concurrent-requests: 5
+      enable-caching: false
+
+logging:
+  level:
+    org.springframework.ai: TRACE
+    com.example: TRACE
+
+# 生產環境配置
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+app:
+  advanced-rag:
+    retrieval:
+      coarse-retrieval:
+        top-k: 100
+      fine-retrieval:
+        top-k: 30
+      reranking:
+        final-top-k: 10
+    performance:
+      max-concurrent-requests: 50
+      cache-ttl: 6h
+
+logging:
+  level:
+    org.springframework.ai: INFO
+    com.example: INFO
+    root: WARN
+
+# 應用程式資訊
+info:
+  app:
+    name: Advanced RAG System
+    description: 企業級進階 RAG 系統 - 智能檢索增強生成
+    version: 1.0.0
+    features:
+      - 智能查詢處理
+      - 多階段檢索
+      - Re-ranking 優化
+      - 上下文管理
+      - 品質控制
+      - 效能監控

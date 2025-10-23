@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-Object Name)",
+      "Bash(Sort-Object Name)",
+      "Bash(where.exe:*)",
+      "Bash(powershell:*)",
+      "Bash(pandoc:*)",
+      "Bash(pwsh:*)",
+      "Bash(winget list:*)",
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
