@@ -1,32 +1,43 @@
-/**
- * 基礎 RESTful API 控制器
- * 展示標準的資源導向設計模式
- */
-package com.example.demo.controller;
+package com.example.api;
 
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.CacheControl;
+import com.example.api.dto.PagedResponse;
+import com.example.api.dto.UserDto;
+import com.example.api.dto.UserSearchCriteria;
+import com.example.api.entity.User;
+import com.example.api.mapper.UserMapper;
+import com.example.api.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 基礎 RESTful API 控制器
+ * 展示標準的資源導向設計模式
+ *
+ * @author Kevin Tsai
+ * @version 1.0
+ * @since 2024-01-01
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 @Validated
 public class UserRestController {
-    
+
     private final UserService userService;
     private final UserMapper userMapper;
-    
+
     public UserRestController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
-    
+
     /**
      * 獲取使用者列表
      * GET /api/v1/users
@@ -44,15 +55,15 @@ public class UserRestController {
                 .name(name)
                 .email(email)
                 .build();
-        
+
         // 執行分頁查詢
         Page<User> userPage = userService.findUsers(criteria, PageRequest.of(page, size));
-        
+
         // 轉換為 DTO
         List<UserDto> userDtos = userPage.getContent().stream()
                 .map(userMapper::toDto)
                 .collect(Collectors.toList());
-        
+
         // 建立分頁回應
         PagedResponse<UserDto> response = PagedResponse.<UserDto>builder()
                 .content(userDtos)
@@ -63,12 +74,12 @@ public class UserRestController {
                 .first(userPage.isFirst())
                 .last(userPage.isLast())
                 .build();
-        
+
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(userPage.getTotalElements()))
                 .body(response);
     }
-    
+
     /**
      * 根據 ID 獲取單一使用者
      * GET /api/v1/users/{id}
@@ -77,7 +88,7 @@ public class UserRestController {
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         UserDto userDto = userMapper.toDto(user);
-        
+
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(Duration.ofMinutes(5)))
                 .body(userDto);

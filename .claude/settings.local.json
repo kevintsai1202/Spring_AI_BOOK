@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(mvn clean compile:*)",
+      "Bash(mvn:*)",
+      "Bash(cmd /c \"set JAVA_HOME=D:\\java\\jdk-21 && set Path=D:\\java\\jdk-21\\bin;%Path% && mvn clean compile\")",
+      "Bash(.build.bat)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
