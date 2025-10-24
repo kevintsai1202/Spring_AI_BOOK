@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventSource 基礎範例 - Spring AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d0d0d0;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .response-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            min-height: 100px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .response-box h3 {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .response-content {
+            line-height: 1.6;
+            color: #555;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status.connecting {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.closed {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .info-box h4 {
+            color: #1976D2;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 EventSource 基礎範例</h1>
+            <p>Spring AI 流式輸出展示 - Server-Sent Events (SSE)</p>
+        </div>
+
+        <div class="content">
+            <div class="form-group">
+                <label for="apiUrl">API 端點 URL</label>
+                <input
+                    type="text"
+                    id="apiUrl"
+                    value="http://localhost:8080/api/ai/chat/stream"
+                    placeholder="輸入 SSE API 端點">
+            </div>
+
+            <div class="form-group">
+                <label for="prompt">提示詞 (Prompt)</label>
+                <textarea
+                    id="prompt"
+                    placeholder="請輸入您的問題或提示詞...">請介紹 Spring AI 的主要功能和特色</textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="startBtn" onclick="startStreaming()">
+                    開始串流
+                </button>
+                <button class="btn-secondary" id="stopBtn" onclick="stopStreaming()" disabled>
+                    停止串流
+                </button>
+                <button class="btn-secondary" id="clearBtn" onclick="clearResponse()">
+                    清除回應
+                </button>
+            </div>
+
+            <div class="response-box">
+                <h3>
+                    AI 回應
+                    <span class="status closed" id="status">未連線</span>
+                    <span id="loadingIndicator"></span>
+                </h3>
+                <div class="response-content" id="response"></div>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 使用說明</h4>
+                <ul>
+                    <li>確保後端服務已啟動在 http://localhost:8080</li>
+                    <li>輸入您的提示詞後點擊「開始串流」</li>
+                    <li>AI 回應會即時逐字顯示，如同 ChatGPT 效果</li>
+                    <li>可隨時點擊「停止串流」中斷連線</li>
+                    <li>開啟瀏覽器開發者工具查看 Network 分頁，觀察 SSE 連線</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // EventSource 實例
+        let eventSource = null;
+
+        /**
+         * 開始流式輸出
+         */
+        function startStreaming() {
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            const prompt = document.getElementById('prompt').value.trim();
+
+            if (!prompt) {
+                alert('請輸入提示詞');
+                return;
+            }
+
+            // 清空之前的回應
+            document.getElementById('response').textContent = '';
+
+            // 更新 UI 狀態
+            updateStatus('connecting');
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('loadingIndicator').innerHTML = '<span class="loading"></span>';
+
+            // 建構完整的 URL（包含查詢參數）
+            const fullUrl = `${apiUrl}?prompt=${encodeURIComponent(prompt)}`;
+            console.log('連線到:', fullUrl);
+
+            try {
+                // 建立 EventSource 連線
+                eventSource = new EventSource(fullUrl);
+
+                // 監聽連線開啟事件
+                eventSource.onopen = function(event) {
+                    console.log('✅ EventSource 連線已建立', event);
+                    updateStatus('connected');
+                };
+
+                // 監聽訊息事件（接收資料）
+                eventSource.onmessage = function(event) {
+                    console.log('📨 收到資料:', event.data);
+
+                    // 將接收到的資料附加到回應區域
+                    const responseDiv = document.getElementById('response');
+                    responseDiv.textContent += event.data;
+
+                    // 自動捲動到底部
+                    responseDiv.scrollTop = responseDiv.scrollHeight;
+                };
+
+                // 監聽錯誤事件
+                eventSource.onerror = function(event) {
+                    console.error('❌ EventSource 錯誤:', event);
+
+                    if (eventSource.readyState === EventSource.CLOSED) {
+                        console.log('🔒 連線已關閉');
+                        updateStatus('closed');
+                        stopStreaming();
+                    } else {
+                        updateStatus('error');
+                        alert('連線發生錯誤，請檢查後端服務是否正常運作');
+                        stopStreaming();
+                    }
+                };
+
+            } catch (error) {
+                console.error('建立 EventSource 失敗:', error);
+                alert('建立連線失敗: ' + error.message);
+                stopStreaming();
+            }
+        }
+
+        /**
+         * 停止流式輸出
+         */
+        function stopStreaming() {
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+                console.log('🛑 EventSource 連線已關閉');
+            }
+
+            // 更新 UI 狀態
+            updateStatus('closed');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('loadingIndicator').innerHTML = '';
+        }
+
+        /**
+         * 清除回應
+         */
+        function clearResponse() {
+            document.getElementById('response').textContent = '';
+        }
+
+        /**
+         * 更新狀態顯示
+         */
+        function updateStatus(status) {
+            const statusElement = document.getElementById('status');
+            statusElement.className = 'status ' + status;
+
+            const statusText = {
+                'connecting': '連線中...',
+                'connected': '已連線',
+                'error': '錯誤',
+                'closed': '未連線'
+            };
+
+            statusElement.textContent = statusText[status] || '未知';
+        }
+
+        // 頁面卸載時關閉連線
+        window.addEventListener('beforeunload', function() {
+            stopStreaming();
+        });
+
+        // 監聽鍵盤事件（Ctrl + Enter 開始串流）
+        document.getElementById('prompt').addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                event.preventDefault();
+                startStreaming();
+            }
+        });
+    </script>
+</body>
+</html>

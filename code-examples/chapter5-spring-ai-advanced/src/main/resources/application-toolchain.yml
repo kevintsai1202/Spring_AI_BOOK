@@ -1,0 +1,52 @@
+# 工具鏈管理功能配置 (5.8 章)
+spring:
+  application:
+    name: spring-ai-advanced
+
+# 工具鏈配置
+toolchain:
+  # 工具註冊設定
+  tools:
+    auto-register: true
+    # 啟用的工具類別
+    enabled-categories:
+      - DATETIME
+      - CALCULATOR
+      - WEATHER
+      - PRODUCT
+      - SALES
+
+  # 工具執行配置
+  execution:
+    # 並發執行設定
+    parallel: true
+    max-threads: 5
+
+    # 超時設定 (毫秒)
+    timeout-ms: 30000
+
+    # 重試設定
+    retry:
+      enabled: true
+      max-attempts: 3
+      delay-ms: 1000
+
+  # 條件選擇器設定
+  selector:
+    # 選擇策略
+    strategy: INTELLIGENT  # INTELLIGENT, SEQUENTIAL, WEIGHTED
+
+    # 工具相似度閾值
+    similarity-threshold: 0.7
+
+  # 監控和日誌
+  monitoring:
+    enabled: true
+    # 記錄執行時間
+    log-execution-time: true
+
+# 日誌配置
+logging:
+  level:
+    com.example.toolchain: DEBUG
+    com.example.tools: DEBUG

@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.5.7</version>
         <relativePath/>
     </parent>
 
@@ -100,6 +100,30 @@
                     <executable>D:\java\jdk-21\bin\javac</executable>
                     <fork>true</fork>
                 </configuration>
+            </plugin>
+
+            <!-- Maven Enforcer Plugin：強制使用 Java 21 避免打包失敗 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[21,)</version>
+                                    <message>請使用 Java 21（路徑：D:\java\jdk-21）執行 Maven，避免 spring-boot-maven-plugin 失敗。</message>
+                                </requireJavaVersion>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

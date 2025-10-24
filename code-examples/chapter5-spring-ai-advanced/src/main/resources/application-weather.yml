@@ -1,0 +1,42 @@
+# 天氣 API 功能配置 (5.9 章)
+spring:
+  application:
+    name: spring-ai-advanced
+
+# 天氣服務配置
+weather:
+  # 台灣中央氣象署 API 配置
+  cwa:
+    api-key: ${WEATHER_API_KEY:}
+    base-url: https://opendata.cwa.gov.tw/api
+    endpoints:
+      forecast: /v1/rest/gridForecast
+      observations: /v1/rest/observationData
+      lightning: /v1/rest/lightningData
+
+  # 換位設定
+  cache:
+    enabled: true
+    ttl-minutes: 30
+    max-size: 100
+
+  # 城市配置
+  cities:
+    taipei:
+      name: 臺北市
+      lat: 25.0443
+      lon: 121.5091
+    taichung:
+      name: 臺中市
+      lat: 24.1477
+      lon: 120.6736
+    kaohsiung:
+      name: 高雄市
+      lat: 22.6228
+      lon: 120.3014
+
+# 日誌配置
+logging:
+  level:
+    com.example.weather: DEBUG
+    org.springframework.web.client: DEBUG

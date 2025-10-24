@@ -1,0 +1,58 @@
+# 結構化輸出功能配置 (5.10 章)
+spring:
+  application:
+    name: spring-ai-advanced
+
+# 結構化輸出配置
+structured:
+  # 輸出格式設定
+  formats:
+    enabled:
+      - JSON
+      - XML
+      - CSV
+
+  # JSON 配置
+  json:
+    # 格式化設定
+    pretty-print: true
+    # 包含 null 值
+    include-nulls: false
+    # 日期格式
+    date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+
+  # XML 配置
+  xml:
+    # 包含 XML 聲明
+    include-declaration: true
+    # 根元素名稱
+    root-element: "result"
+    # 縮排
+    indent: true
+
+  # CSV 配置
+  csv:
+    # 使用標題
+    include-header: true
+    # 分隔符
+    delimiter: ","
+
+  # 驗證設定
+  validation:
+    # 啟用 JSON Schema 驗證
+    enabled: true
+    # 未知欄位策略
+    unknown-fields: IGNORE  # IGNORE, WARN, FAIL
+
+  # 轉換器設定
+  converters:
+    # 註冊自動轉換器
+    auto-register: true
+    # 快取轉換結果
+    cache-enabled: true
+
+# 日誌配置
+logging:
+  level:
+    com.example.structured: DEBUG
+    com.example.converter: DEBUG

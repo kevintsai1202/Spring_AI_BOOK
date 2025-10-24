@@ -1,12 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mkdir:*)",
-      "Bash(mvn clean compile:*)",
-      "Bash(mvn:*)",
-      "Bash(cmd /c \"set JAVA_HOME=D:\\java\\jdk-21 && set Path=D:\\java\\jdk-21\\bin;%Path% && mvn clean compile\")",
-      "Bash(.build.bat)",
-      "Bash(git add:*)"
+      "Bash(powershell -NoProfile -Command:*)",
+      "Bash(awk '{print $9, \"\"\"\"(\"\"\"\" $5 \"\"\"\")\"\"\"\"}')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | head -100')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | tail -50')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | grep -E \"\"(BUILD|ERROR|\\[ERROR\\])\"\" | head -20')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | tail -5')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"\"\"D:\\java\\jdk-21\"\"\"\"; $env:Path=\"\"\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"\"\"; mvn clean compile 2>&1 | grep -A 5 \"\"\"\"ERROR\"\"\"\"')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | tail -10')",
+      "Bash(curl:*)",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | tail -20')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | grep -E \"\"(BUILD|ERROR|WARNING)\"\" | head -10')",
+      "Bash(powershell -Command '$env:JAVA_HOME=\"\"D:\\java\\jdk-21\"\"; $env:Path=\"\"D:\\java\\jdk-21\\bin;$env:Path\"\"; mvn clean compile 2>&1 | tail -30')",
+      "Bash(powershell -Command 'Start-Sleep -Seconds 5; echo \"\"Waiting for app to start...\"\"')",
+      "Bash(powershell -Command:*)",
+      "Bash(bash:*)",
+      "mcp__context7__get-library-docs",
+      "mcp__context7__resolve-library-id",
+      "Bash(__NEW_LINE__ echo \"=== 完整應用日誌 ===\" cat /tmp/voice-app.log)",
+      "Bash(__NEW_LINE__ cd \"E:\\Spring_AI_BOOK\\code-examples\\chapter5-voice-generation\")",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: spring-ai-image-generation
+
+  # OpenAI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      image:
+        options:
+          model: dall-e-3
+          quality: hd
+          style: vivid
+          size: 1024x1024
+
+    # ZhiPu AI 配置 (可選)
+    zhipuai:
+      api-key: ${ZHIPUAI_API_KEY:}
+      base-url: https://open.bigmodel.cn/api/paas/v4
+      image:
+        options:
+          model: cogview-3
+          width: 1024
+          height: 1024
+          quality: standard
+          style: vivid
+
+# 應用程式配置
+app:
+  image:
+    generation:
+      max-batch-size: 5
+      default-timeout: 30s
+      cache-enabled: true
+      output-directory: ./generated-images
+
+# 伺服器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    org.springframework.ai: DEBUG
+    com.example: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"

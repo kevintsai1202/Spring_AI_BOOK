@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: spring-ai-voice-generation
+
+  # 排除 Redis 自動配置（系統無 Redis 服務器時使用）
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+  # OpenAI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      audio:
+        speech:
+          options:
+            model: tts-1-hd
+            voice: alloy
+            response-format: mp3
+            speed: 1.0
+
+# 應用程式配置
+app:
+  voice:
+    generation:
+      max-batch-size: 10
+      default-timeout: 30s
+      cache-enabled: true
+      output-directory: ./generated-voices
+      supported-formats: ["mp3", "opus", "aac", "flac"]
+      max-text-length: 4096
+      default-voice: alloy
+      default-model: tts-1-hd
+
+# 伺服器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    org.springframework.ai: DEBUG
+    com.example: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"

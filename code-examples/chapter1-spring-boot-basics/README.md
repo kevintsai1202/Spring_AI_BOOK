@@ -70,19 +70,19 @@ chapter1-spring-boot-basics/
 - **IDE**: IntelliJ IDEA / Eclipse / VS Code (推薦)
 
 ### 1. 編譯專案
-```bash
-mvn clean compile
+```powershell
+mvn --java-home D:\java\jdk-21 clean compile
 ```
 
 ### 2. 執行應用程式
-```bash
-mvn spring-boot:run
+```powershell
+mvn --java-home D:\java\jdk-21 spring-boot:run
 ```
 
 或直接執行 JAR：
-```bash
-mvn clean package
-java -jar target/chapter1-spring-boot-basics-1.0.0.jar
+```powershell
+mvn --java-home D:\java\jdk-21 clean package
+java -jar target\chapter1-spring-boot-basics-1.0.0.jar
 ```
 
 ### 3. 驗證啟動
@@ -195,20 +195,18 @@ public class UserController {
 ## 🧪 測試
 
 ### 執行測試
-```bash
-mvn test
+```powershell
+mvn --java-home D:\java\jdk-21 test
 ```
 
 ### 手動測試
 使用 Postman 或 curl 測試 API：
-```bash
+```powershell
 # 取得所有使用者
 curl http://localhost:8080/api/users
 
 # 建立新使用者
-curl -X POST http://localhost:8080/api/users \
-  -H "Content-Type: application/json" \
-  -d '{"username":"test","email":"test@example.com","password":"pass123","fullName":"Test User"}'
+curl -X POST http://localhost:8080/api/users `\r`n  -H "Content-Type: application/json" `\r`n  -d '{"username":"test","email":"test@example.com","password":"pass123","fullName":"Test User"}'
 ```
 
 ---
@@ -233,3 +231,11 @@ curl -X POST http://localhost:8080/api/users \
 **建立日期**: 2025-10-23
 **Spring Boot 版本**: 3.2.0
 **Java 版本**: 21
+
+
+
+
+
+
+
+

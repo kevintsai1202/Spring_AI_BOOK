@@ -1,0 +1,39 @@
+# 企業數據功能配置 (5.7 章)
+spring:
+  application:
+    name: spring-ai-advanced
+
+# 企業數據配置
+enterprise:
+  # 產品數據庫配置
+  products:
+    # 樣本產品數據
+    sample-data: true
+    cache:
+      enabled: true
+      ttl-minutes: 60
+
+  # 銷售數據配置
+  sales:
+    # 月度報表配置
+    reports:
+      enabled: true
+      include-forecast: true
+
+    # 分析設定
+    analytics:
+      min-sample-size: 5
+      threshold-increase: 10  # 百分比
+
+  # 訪問控制
+  security:
+    require-authentication: true
+    roles:
+      - SALES_ANALYST
+      - SALES_MANAGER
+
+# 日誌配置
+logging:
+  level:
+    com.example.enterprise: DEBUG
+    com.example.service: DEBUG

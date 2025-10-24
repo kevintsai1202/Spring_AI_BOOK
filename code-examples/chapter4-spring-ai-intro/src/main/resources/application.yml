@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: spring-ai-intro
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 1000
+          stream: true  # 啟用流式輸出
+
+    # Groq 配置範例
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      base-url: https://api.groq.com/openai
+      chat:
+        options:
+          model: llama-3.1-70b-versatile
+
+# 應用程式配置
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  # SSE 連線超時設定
+  netty:
+    connection-timeout: 30s
+
+# Reactor 配置
+reactor:
+  netty:
+    connection-provider:
+      max-connections: 100
+      max-idle-time: 30s
+
+# 日誌配置
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    reactor.netty: INFO
+    com.example.springai: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 應用程式資訊
+management:
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Spring AI 入門範例
+    description: 展示 Spring AI 基本功能的範例應用程式
+    version: 1.0.0
