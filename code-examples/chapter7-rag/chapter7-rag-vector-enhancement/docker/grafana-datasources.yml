@@ -1,0 +1,15 @@
+# Grafana 資料源配置
+
+apiVersion: 1
+
+datasources:
+  # Prometheus 資料源
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: '15s'
+      httpMethod: 'POST'

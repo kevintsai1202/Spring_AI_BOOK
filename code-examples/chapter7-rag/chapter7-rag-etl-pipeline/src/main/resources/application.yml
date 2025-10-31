@@ -1,0 +1,105 @@
+spring:
+  application:
+    name: chapter7-rag-etl-pipeline
+
+  # Neo4j 客戶端連接配置 (Spring Data Neo4j)
+  neo4j:
+    uri: ${NEO4J_URI:bolt://localhost:7687}
+    authentication:
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PASSWORD:test1234}
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+
+    # Neo4j 向量資料庫配置
+    vectorstore:
+      neo4j:
+        database-name: ${NEO4J_DATABASE:neo4j}
+        index-name: document-embeddings
+        embedding-dimension: 1536
+        distance-type: COSINE
+        initialize-schema: true
+
+server:
+  port: 8081
+
+# ETL Pipeline 配置
+app:
+  etl:
+    # 分塊配置
+    chunking:
+      default-chunk-size: 1000
+      min-chunk-size-chars: 350
+      min-chunk-length-to-embed: 10
+      max-num-chunks: 10000
+      keep-separator: true
+
+    # 元資料增強配置
+    enrichment:
+      enable-basic-metadata: true
+      enable-language-detection: true
+      enable-content-statistics: true
+      enable-keyword-extraction: true
+      keyword-count: 5
+      enable-summary-generation: true
+
+    # 壓縮檔案配置
+    archive:
+      supported-types:
+        - pdf
+        - doc
+        - docx
+        - xls
+        - xlsx
+        - ppt
+        - pptx
+        - txt
+        - md
+        - html
+        - htm
+        - json
+      recursive: true
+      max-depth: 3
+      max-file-size: 104857600  # 100MB
+      skip-corrupted: true
+
+    # 載入配置
+    load:
+      batch-size: 50
+      batch-delay-ms: 100
+      continue-on-error: true
+
+# 監控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.etl: DEBUG
+    org.springframework.ai: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'

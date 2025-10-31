@@ -1,0 +1,42 @@
+[
+  {
+    "id": "edge-001",
+    "question": "當沒有找到相關文檔時系統如何處理？",
+    "expectedKeywords": ["無結果", "處理", "提示", "fallback"],
+    "expectedContext": "異常處理文檔",
+    "category": "邊界情況",
+    "difficulty": 0.6
+  },
+  {
+    "id": "edge-002",
+    "question": "如何處理非常長的查詢文本？",
+    "expectedKeywords": ["長文本", "截斷", "分段", "處理"],
+    "expectedContext": "文本處理指南",
+    "category": "邊界情況",
+    "difficulty": 0.7
+  },
+  {
+    "id": "edge-003",
+    "question": "內容審核失敗時應該怎麼辦？",
+    "expectedKeywords": ["審核", "失敗", "降級", "處理"],
+    "expectedContext": "審核機制文檔",
+    "category": "異常處理",
+    "difficulty": 0.8
+  },
+  {
+    "id": "edge-004",
+    "question": "OpenAI API 限流時的應對策略是什麼？",
+    "expectedKeywords": ["限流", "重試", "降級", "策略"],
+    "expectedContext": "錯誤處理文檔",
+    "category": "異常處理",
+    "difficulty": 0.9
+  },
+  {
+    "id": "edge-005",
+    "question": "多租戶環境下如何隔離不同用戶的數據？",
+    "expectedKeywords": ["多租戶", "隔離", "權限", "安全"],
+    "expectedContext": "多租戶架構文檔",
+    "category": "企業特性",
+    "difficulty": 1.0
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "domain-001",
+    "question": "Spring AI 的 ChatClient 如何使用？",
+    "expectedKeywords": ["ChatClient", "Builder", "調用", "API"],
+    "expectedContext": "ChatClient 使用文檔",
+    "category": "進階使用",
+    "difficulty": 0.7
+  },
+  {
+    "id": "domain-002",
+    "question": "如何實現自定義的 Advisor？",
+    "expectedKeywords": ["Advisor", "CallAroundAdvisor", "接口", "實現"],
+    "expectedContext": "Advisor 開發指南",
+    "category": "進階開發",
+    "difficulty": 0.8
+  },
+  {
+    "id": "domain-003",
+    "question": "PgVector 向量數據庫的配置方式有哪些？",
+    "expectedKeywords": ["PgVector", "PostgreSQL", "配置", "向量存儲"],
+    "expectedContext": "向量數據庫配置文檔",
+    "category": "數據庫管理",
+    "difficulty": 0.7
+  },
+  {
+    "id": "domain-004",
+    "question": "如何優化 Embedding 的性能？",
+    "expectedKeywords": ["優化", "快取", "批量處理", "性能"],
+    "expectedContext": "性能優化指南",
+    "category": "性能優化",
+    "difficulty": 0.8
+  },
+  {
+    "id": "domain-005",
+    "question": "Re-ranking 算法的評分因子有哪些？",
+    "expectedKeywords": ["Re-ranking", "語義相似度", "BM25", "品質", "新鮮度"],
+    "expectedContext": "Re-ranking 算法文檔",
+    "category": "算法原理",
+    "difficulty": 0.9
+  }
+]

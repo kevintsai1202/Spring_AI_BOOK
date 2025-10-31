@@ -1,0 +1,37 @@
+# 生產環境配置
+
+logging:
+  level:
+    root: INFO
+    com.example.advancedrag: INFO
+    org.springframework.ai: WARN
+    org.springframework.web: WARN
+
+spring:
+  jpa:
+    show-sql: false
+
+server:
+  tomcat:
+    threads:
+      max: 300
+      min-spare: 20
+
+app:
+  # 生產環境必須啟用審核
+  moderation:
+    enabled: true
+    threshold: 0.9  # 生產環境提高審核閾值
+
+  # 生產環境啟用持續評估
+  evaluation:
+    continuous: true
+    interval: 3600000  # 1小時
+
+  # 生產環境監控配置
+  monitoring:
+    metrics:
+      enabled: true
+      detailed: true
+    alerts:
+      enabled: true

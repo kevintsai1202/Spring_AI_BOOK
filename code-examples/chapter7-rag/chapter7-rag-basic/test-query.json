@@ -1,0 +1,5 @@
+{
+  "question": "什麼是 Spring AI 的核心功能?",
+  "topK": 5,
+  "similarityThreshold": 0.5
+}

@@ -1,0 +1,5 @@
+{
+  "query": "有哪些員工具備 Java 開發技能?",
+  "topK": 5,
+  "similarityThreshold": 0.6
+}

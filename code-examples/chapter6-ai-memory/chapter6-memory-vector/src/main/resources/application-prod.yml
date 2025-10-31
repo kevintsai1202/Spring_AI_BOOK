@@ -1,0 +1,40 @@
+# 生產環境配置
+
+spring:
+  ai:
+    openai:
+      chat:
+        options:
+          temperature: 0.5
+          max-tokens: 1000
+
+neo4j:
+  uri: ${NEO4J_URI}
+  authentication:
+    username: ${NEO4J_USERNAME}
+    password: ${NEO4J_PASSWORD}
+  database: ${NEO4J_DATABASE:neo4j}
+
+memory:
+  sync:
+    enabled: true
+    interval: 300000  # 5分鐘
+    message-threshold: 20
+    batch-size: 100
+
+retrieval:
+  strategy: HYBRID
+  weights:
+    short-term: 0.6
+    long-term: 0.4
+
+logging:
+  level:
+    root: WARN
+    com.example.memory: INFO
+    org.springframework.ai: INFO
+    org.neo4j.driver: WARN
+  file:
+    name: /var/log/spring-ai/chapter6-memory-vector.log
+    max-size: 100MB
+    max-history: 30

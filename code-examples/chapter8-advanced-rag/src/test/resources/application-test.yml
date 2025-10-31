@@ -1,0 +1,69 @@
+# Advanced RAG 測試環境配置
+
+spring:
+  application:
+    name: advanced-rag-test
+
+  ai:
+    openai:
+      # 測試環境使用 Mock API Key（實際測試可能需要真實 Key）
+      api-key: ${OPENAI_API_KEY:sk-test-mock-key}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 2000
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+# RAG 配置
+rag:
+  # 向量資料庫配置
+  vector-store:
+    type: simple
+    dimensions: 1536
+
+  # 檢索配置
+  retrieval:
+    top-k: 10
+    final-top-k: 5
+    similarity-threshold: 0.7
+
+  # Re-ranking 配置
+  reranking:
+    enabled: true
+    semantic-weight: 0.6
+    bm25-weight: 0.4
+
+  # 查詢優化配置
+  query:
+    enable-rewrite: false
+    enable-expansion: false
+    expansion-count: 3
+
+  # 內容審核配置
+  moderation:
+    enabled: false
+
+  # OpenAI API Key（用於審核）
+  openai-api-key: ${OPENAI_API_KEY:sk-test-mock-key}
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.advancedrag: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management 端點配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

@@ -15,6 +15,13 @@
 - **使用版本**: Maven 3.9+
 - **當前安裝**: Maven 3.9.11
 - **安裝路徑**: `D:\apache-maven-3.9.11`
+- **pom.xml範例**: pom.xml.example
+
+### Spring AI 官方文件
+- **Spring boot版本**: Spring Boot 3.5.7
+- **使用版本**: Spring AI 1.0.3
+- **文件路徑**: D:\Spring AI DOC\1.0.3
+
 
 ## 專案結構
 
@@ -81,17 +88,17 @@ mvn spring-boot:run
 1. **所有章節專案都使用 Java 21**，執行前必須設定 JAVA_HOME
 2. 預設系統使用 Java 8，需要明確切換到 Java 21
 3. 每次開啟新的 PowerShell 視窗都需要重新設定環境變數
-4. 建議使用 PowerShell 7+ 執行命令
+4. 使用 PowerShell 7+ 執行命令
 
 ## 專案狀態
 
 - ✅ 第0章：環境準備（已完成）
 - ✅ 第1章：Spring Boot 基礎（已完成並測試）
 - ✅ 第2章：Spring MVC API（已完成並測試）
-- 🔄 第3章：企業級功能（程式碼已建立，待編譯測試）
-- ⏳ 第4章：Spring AI 入門（待開發）
-- ⏳ 第5章：Spring AI 進階（待開發）
-- ⏳ 第6章：AI 記憶增強（待開發）
-- ⏳ 第7章：RAG 基礎（待開發）
+- ✅ 第3章：企業級功能（已完成並測試）
+- ✅ 第4章：Spring AI 入門（已完成並測試）
+- ✅ 第5章：Spring AI 進階（已完成並測試）
+- ✅ 第6章：AI 記憶增強（已完成並測試）
+- ⏳ 第7章：RAG 基礎（開發中）
 - ⏳ 第8章：RAG 進階（待開發）
 - ⏳ 第9章：MCP 整合（待開發）

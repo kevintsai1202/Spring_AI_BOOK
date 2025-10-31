@@ -1,0 +1,226 @@
+spring:
+  application:
+    name: advanced-rag
+
+  # Spring AI OpenAI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        enabled: true
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+          max-tokens: 2000
+      embedding:
+        enabled: true
+        options:
+          model: text-embedding-3-small
+          dimensions: 1024
+      moderation:
+        enabled: true
+        model: text-moderation-latest
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1024
+
+  # 數據源配置（PgVector）
+  datasource:
+    url: jdbc:postgresql://localhost:5432/advanced_rag
+    username: raguser
+    password: ragpass123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Redis 配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+
+  # JPA 配置
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+# Server 配置
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+
+# Management / Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+# Logging 配置
+logging:
+  level:
+    root: INFO
+    com.example.advancedrag: DEBUG
+    org.springframework.ai: INFO
+    org.springframework.web: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  file:
+    name: logs/advanced-rag.log
+    max-size: 10MB
+    max-history: 30
+
+# ======================================
+# Advanced RAG 系統自定義配置
+# ======================================
+app:
+  rag:
+    # 檢索配置
+    final-top-k: 5                    # 最終返回的文檔數量
+    coarse-top-k: 30                  # 粗檢索的文檔數量
+    similarity-threshold: 0.7         # 相似度閾值
+    max-context-length: 4000          # 最大上下文長度
+    enable-reranking: true            # 是否啟用 Re-ranking
+
+    # 查詢處理配置
+    enable-query-rewrite: true        # 是否啟用查詢重寫
+    enable-query-expansion: true      # 是否啟用查詢擴展
+    query-expansion-count: 3          # 查詢擴展數量
+
+    # Re-ranking 配置（Spring AI 1.0.3 Advisor 模式）
+    reranking:
+      # 基本配置
+      enabled: true                     # 是否啟用 Re-ranking
+      provider: voyage                  # Re-ranking 提供者：local, voyage, cohere, jina
+      api-key: ${VOYAGE_API_KEY:}       # API Key（Voyage AI、Cohere、Jina 需要）
+      model: rerank-2.5                 # Re-ranking 模型名稱（使用 Voyage rerank-2.5）
+      first-stage-top-k: 50             # 第一階段粗檢索的文檔數量
+      final-top-k: 5                    # 最終返回的文檔數量
+      include-score-details: false      # 是否在響應中包含評分詳情
+
+  # Embedding 配置
+  embedding:
+    primary-model: text-embedding-3-small      # 主要模型
+    reranking-model: text-embedding-3-small    # Re-ranking 模型
+    high-accuracy-model: text-embedding-3-large # 高精度模型
+
+    default-dimensions: 1024          # 默認向量維度
+    high-accuracy-dimensions: 3072    # 高精度向量維度
+    low-cost-dimensions: 512          # 低成本向量維度
+
+    enable-cache: true                # 是否啟用快取
+    cache-ttl: 86400                  # 快取過期時間（秒）24小時
+    cache-key-prefix: "emb:"          # 快取鍵前綴
+
+    # 預處理配置
+    preprocessing:
+      clean-special-chars: true
+      normalize-whitespace: true
+      filter-by-length: true
+      min-length: 10
+      max-length: 8000
+
+  # 內容審核配置
+  moderation:
+    enabled: true                     # 是否啟用審核
+    threshold: 0.8                    # 風險閾值
+
+    # 審核提供商配置
+    providers:
+      openai:
+        enabled: true
+        weight: 0.5                   # OpenAI 審核權重（不使用 Mistral 時調高）
+      custom:
+        enabled: true
+        weight: 0.5                   # 自定義規則權重（不使用 Mistral 時調高）
+
+    # 自定義敏感詞列表
+    sensitive-words:
+      - "敏感詞1"
+      - "敏感詞2"
+
+    # PII 檢測配置
+    pii-detection:
+      enabled: true
+      patterns:
+        - "\\b\\d{3}-\\d{2}-\\d{4}\\b"  # 身份證號模式（示例）
+        - "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b"  # Email
+
+  # 評估測試配置
+  evaluation:
+    continuous: true                  # 是否啟用持續評估
+    interval: 3600000                 # 評估間隔（毫秒）1小時
+
+    # 評估閾值
+    thresholds:
+      relevancy: 0.8                  # 相關性閾值
+      factuality: 0.85                # 準確性閾值
+      completeness: 0.7               # 完整性閾值
+      coherence: 0.75                 # 連貫性閾值
+      response-time: 5000             # 回應時間閾值（毫秒）
+      overall: 0.8                    # 總體分數閾值
+
+    # 測試案例配置
+    test-cases:
+      basic-qa-file: "classpath:test-cases/basic-qa.json"
+      domain-specific-file: "classpath:test-cases/domain-specific.json"
+      edge-cases-file: "classpath:test-cases/edge-cases.json"
+
+    # 報告配置
+    report:
+      output-dir: "reports"
+      file-name-pattern: "evaluation-{timestamp}.json"
+
+  # 監控配置
+  monitoring:
+    metrics:
+      enabled: true
+      detailed: true
+
+    alerts:
+      enabled: true
+      error-rate-threshold: 0.05      # 錯誤率閾值
+      response-time-threshold: 10000  # 回應時間閾值（毫秒）
+      cache-hit-rate-threshold: 0.5   # 快取命中率閾值

@@ -1,0 +1,41 @@
+# 生產環境配置
+spring:
+  # Neo4j 向量資料庫配置（生產環境連接池優化）
+  ai:
+    vectorstore:
+      neo4j:
+        pool:
+          max-size: 100
+          acquisition-timeout: 120s
+
+# 日誌配置（生產環境減少日誌輸出）
+logging:
+  level:
+    root: WARN
+    com.example.enhancement: INFO
+    org.springframework.ai: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/enhancement/application.log
+    max-size: 100MB
+    max-history: 30
+
+# 監控配置（生產環境只開放必要端點）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+
+# 應用程式配置（生產環境）
+app:
+  security:
+    enable-access-control: true   # 生產環境必須啟用權限控制
+    enable-data-masking: true     # 生產環境必須啟用資料脫敏
+    enable-audit-logging: true    # 生產環境必須啟用審計日誌
+
+  # 向量品質配置（生產環境更嚴格）
+  vector-quality:
+    quality-threshold: 0.8        # 提高品質閾值

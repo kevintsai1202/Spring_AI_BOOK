@@ -1,0 +1,42 @@
+[
+  {
+    "id": "basic-001",
+    "question": "什麼是 Spring AI？",
+    "expectedKeywords": ["Spring", "AI", "框架", "人工智能"],
+    "expectedContext": "Spring AI 相關文檔",
+    "category": "基礎知識",
+    "difficulty": 0.3
+  },
+  {
+    "id": "basic-002",
+    "question": "Spring AI 支持哪些大語言模型？",
+    "expectedKeywords": ["OpenAI", "Anthropic", "模型", "支持"],
+    "expectedContext": "模型提供商列表",
+    "category": "基礎知識",
+    "difficulty": 0.4
+  },
+  {
+    "id": "basic-003",
+    "question": "如何在 Spring Boot 專案中配置 OpenAI API Key？",
+    "expectedKeywords": ["配置", "API Key", "application.yml", "環境變數"],
+    "expectedContext": "配置文檔",
+    "category": "配置管理",
+    "difficulty": 0.5
+  },
+  {
+    "id": "basic-004",
+    "question": "什麼是 Embedding 模型？",
+    "expectedKeywords": ["Embedding", "向量", "嵌入", "表示"],
+    "expectedContext": "Embedding 概念說明",
+    "category": "基礎知識",
+    "difficulty": 0.4
+  },
+  {
+    "id": "basic-005",
+    "question": "RAG 系統的工作原理是什麼？",
+    "expectedKeywords": ["檢索", "增強", "生成", "RAG", "知識庫"],
+    "expectedContext": "RAG 原理文檔",
+    "category": "基礎知識",
+    "difficulty": 0.6
+  }
+]

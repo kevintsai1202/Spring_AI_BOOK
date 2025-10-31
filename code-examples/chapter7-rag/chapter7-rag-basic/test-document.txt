@@ -1,0 +1,38 @@
+Spring AI 介紹
+
+Spring AI 是一個用於構建 AI 驅動應用程序的框架。它提供了與各種 AI 模型和向量資料庫的整合。
+
+核心功能:
+1. Chat Model 整合 (OpenAI, Azure OpenAI, Anthropic Claude 等)
+2. Embedding Model 支援 (text-embedding-3-small, text-embedding-3-large)
+3. Vector Store 整合 (Neo4j, Pinecone, Chroma, Milvus 等)
+4. RAG (Retrieval-Augmented Generation) 支援
+5. Function Calling 功能
+6. Advisors 系統 (QuestionAnswerAdvisor, SafeGuardAdvisor 等)
+
+Spring AI 的優勢:
+- Spring Boot 自動配置,開箱即用
+- 統一的 API 抽象,易於切換不同的 AI 提供商
+- 豐富的生態系統整合
+- 完整的 Document Reader 支援多種格式
+- ETL Pipeline 工具鏈
+
+Spring AI 的核心組件:
+- ChatClient: 統一的對話接口
+- EmbeddingModel: 文本向量化
+- VectorStore: 向量存儲與檢索
+- DocumentReader: 文檔讀取器
+- DocumentTransformer: 文檔轉換器
+- Advisor: 增強功能(如 RAG)
+
+適用場景:
+- 智能客服系統
+- 知識庫問答
+- 文檔分析與摘要
+- 代碼生成與解釋
+- 多模態 AI 應用
+
+Spring AI 與其他框架的比較:
+- 相比 LangChain: 更適合 Java/Spring 生態系統
+- 相比 LlamaIndex: 提供更完整的企業級功能
+- 原生 Spring Boot 整合,享受 Spring 生態系統的所有優勢

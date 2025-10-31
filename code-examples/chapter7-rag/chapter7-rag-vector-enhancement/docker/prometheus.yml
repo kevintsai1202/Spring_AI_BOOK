@@ -1,0 +1,59 @@
+# Prometheus 監控配置
+
+global:
+  scrape_interval: 15s  # 每 15 秒抓取一次指標
+  evaluation_interval: 15s  # 每 15 秒評估一次規則
+
+  # 為所有時間序列和告警添加外部標籤
+  external_labels:
+    monitor: 'rag-enhancement-monitor'
+
+# 告警管理器配置（可選）
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - localhost:9093
+
+# 抓取配置
+scrape_configs:
+  # Prometheus 自身監控
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Spring Boot 應用監控
+  - job_name: 'spring-boot-app'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s  # Spring Boot 應用更頻繁抓取
+    static_configs:
+      - targets: ['host.docker.internal:8080']  # Windows/Mac 使用 host.docker.internal
+        labels:
+          application: 'rag-vector-enhancement'
+          environment: 'dev'
+
+    # 健康檢查配置
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: 'spring-boot-app'
+
+  # PostgreSQL 監控（使用 postgres_exporter 時）
+  # - job_name: 'postgres'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+
+  # Redis 監控（使用 redis_exporter 時）
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
+
+  # Neo4j 監控
+  - job_name: 'neo4j'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['neo4j:2004']
+        labels:
+          application: 'neo4j-vectorstore'
+          environment: 'dev'

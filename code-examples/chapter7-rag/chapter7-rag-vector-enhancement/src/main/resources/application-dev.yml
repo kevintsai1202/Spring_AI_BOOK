@@ -1,0 +1,24 @@
+# 開發環境配置
+
+# 日誌配置（開發環境更詳細）
+logging:
+  level:
+    root: INFO
+    com.example.enhancement: DEBUG
+    org.springframework.ai: DEBUG
+    org.springframework.security: DEBUG
+    org.neo4j.driver: DEBUG
+
+# 監控配置（開發環境開放更多端點）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# 應用程式配置（開發環境）
+app:
+  security:
+    enable-access-control: false  # 開發環境可以關閉權限控制以便測試
+    enable-data-masking: false    # 開發環境可以關閉資料脫敏
+    enable-audit-logging: false   # 開發環境可以關閉審計日誌

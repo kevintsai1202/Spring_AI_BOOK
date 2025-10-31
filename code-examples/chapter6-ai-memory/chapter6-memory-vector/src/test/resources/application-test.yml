@@ -1,0 +1,26 @@
+# 測試環境配置
+
+spring:
+  ai:
+    openai:
+      api-key: test-key
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+neo4j:
+  uri: bolt://localhost:7687
+  authentication:
+    username: neo4j
+    password: test
+
+memory:
+  sync:
+    enabled: false  # 測試時禁用自動同步
+
+logging:
+  level:
+    com.example.memory: DEBUG

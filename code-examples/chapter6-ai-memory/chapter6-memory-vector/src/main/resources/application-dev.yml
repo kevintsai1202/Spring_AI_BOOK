@@ -1,0 +1,29 @@
+# 開發環境配置
+
+spring:
+  ai:
+    openai:
+      chat:
+        options:
+          temperature: 0.7
+          max-tokens: 500
+
+neo4j:
+  uri: bolt://localhost:7687
+  authentication:
+    username: neo4j
+    password: password
+
+memory:
+  sync:
+    enabled: true
+    interval: 60000  # 開發環境1分鐘同步一次
+    message-threshold: 5
+
+logging:
+  level:
+    com.example.memory: DEBUG
+    org.springframework.ai: TRACE
+    org.neo4j.driver: DEBUG
+  file:
+    name: logs/chapter6-memory-vector-dev.log

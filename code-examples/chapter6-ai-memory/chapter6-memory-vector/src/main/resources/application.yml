@@ -1,0 +1,89 @@
+spring:
+  application:
+    name: chapter6-memory-vector
+
+  # AI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+
+# Neo4j 配置
+neo4j:
+  uri: ${NEO4J_URI:bolt://localhost:7687}
+  authentication:
+    username: ${NEO4J_USERNAME:neo4j}
+    password: ${NEO4J_PASSWORD:password}
+  database: ${NEO4J_DATABASE:neo4j}
+
+# 向量存儲配置
+vector:
+  store:
+    distance-type: COSINE
+    embedding-dimension: 1536
+    index-name: spring-ai-memory-index
+    label: MemoryDocument
+    embedding-property: embedding
+    initialize-schema: true
+
+# 記憶系統配置
+memory:
+  # 短期記憶配置
+  short-term:
+    max-messages: 20
+    type: in-memory
+
+  # 長期記憶配置
+  long-term:
+    enabled: true
+    similarity-threshold: 0.75
+    top-k: 10
+
+  # 同步配置
+  sync:
+    enabled: true
+    # 自動同步間隔(毫秒)
+    interval: 300000  # 5分鐘
+    # 觸發同步的訊息數量閾值
+    message-threshold: 10
+    batch-size: 50
+
+# 檢索配置
+retrieval:
+  strategy: HYBRID  # SHORT_TERM_ONLY, LONG_TERM_ONLY, HYBRID
+  # 混合檢索權重
+  weights:
+    short-term: 0.6
+    long-term: 0.4
+
+# Server 配置
+server:
+  port: 8080
+
+# Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.memory: DEBUG
+    org.springframework.ai: DEBUG
+    org.neo4j.driver: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

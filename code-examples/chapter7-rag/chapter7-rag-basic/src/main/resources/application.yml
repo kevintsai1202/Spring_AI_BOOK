@@ -1,0 +1,80 @@
+# Spring AI Chapter 7 - RAG 基礎系統配置
+
+spring:
+  application:
+    name: chapter7-rag-basic
+
+  # Neo4j 客戶端連接配置 (Spring Data Neo4j)
+  neo4j:
+    uri: ${NEO4J_URI:bolt://localhost:7687}
+    authentication:
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PASSWORD:test1234}
+
+  # Spring AI OpenAI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+
+    # Neo4j 向量資料庫配置
+    vectorstore:
+      neo4j:
+        database-name: ${NEO4J_DATABASE:neo4j}
+        index-name: document-embeddings
+        embedding-dimension: 1536
+        distance-type: COSINE
+        initialize-schema: true
+
+  # 文件上傳配置
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# RAG 系統配置
+app:
+  rag:
+    # 檢索配置
+    top-k: 5
+    similarity-threshold: 0.7
+
+    # 文本分塊配置
+    chunk-size: 800
+    chunk-overlap: 200
+
+# 服務器配置
+server:
+  port: 8080
+
+# 監控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.rag: DEBUG
+    org.springframework.ai: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -57,3 +57,14 @@ desktop.ini
 *.sqlite
 chroma/
 vectorstore/
+
+# 測試與啟動腳本（可能包含敏感資訊）
+**/test-api.ps1
+**/run-complete-test.ps1
+**/start-app.ps1
+**/start-with-env.bat
+**/restart-app.bat
+**/run.bat
+
+# Claude Code 本地設定（可能包含敏感資訊）
+.claude/settings.local.json

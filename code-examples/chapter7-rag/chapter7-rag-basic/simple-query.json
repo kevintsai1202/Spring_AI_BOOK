@@ -1,0 +1,5 @@
+{
+  "question": "What is Spring Framework?",
+  "topK": 3,
+  "similarityThreshold": 0.5
+}

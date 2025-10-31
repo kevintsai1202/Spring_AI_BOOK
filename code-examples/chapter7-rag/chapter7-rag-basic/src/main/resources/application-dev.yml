@@ -1,0 +1,21 @@
+# 開發環境配置
+
+spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+
+    vectorstore:
+      neo4j:
+        uri: bolt://localhost:7687
+        username: neo4j
+        password: test1234
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example.rag: DEBUG
+    org.springframework.ai: DEBUG

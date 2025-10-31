@@ -1,0 +1,154 @@
+spring:
+  application:
+    name: chapter7-rag-vector-enhancement
+
+  # Neo4j 連接配置（用於 Spring AI VectorStore）
+  neo4j:
+    uri: ${NEO4J_URI:bolt://localhost:7687}
+    authentication:
+      username: ${NEO4J_USERNAME:neo4j}
+      password: ${NEO4J_PASSWORD:test1234}
+
+  # PostgreSQL 企業資料庫配置
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/enterprise_db}
+    username: ${POSTGRES_USERNAME:enterprise_user}
+    password: ${POSTGRES_PASSWORD:enterprise_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA/Hibernate 配置
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none  # 使用 init-db.sql 初始化
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  # Redis 快取配置
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+
+  # Spring Cache 配置
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000  # 10 分鐘
+      cache-null-values: false
+
+  # Spring AI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 1536
+
+    # Neo4j 向量資料庫配置
+    vectorstore:
+      neo4j:
+        database-name: ${NEO4J_DATABASE:neo4j}
+        initialize-schema: true
+        # 向量索引配置
+        index-name: ${NEO4J_INDEX_NAME:vector-index}
+        embedding-dimension: 1536
+        distance-type: cosine
+
+# 應用程式自定義配置
+app:
+  # 文本清理配置
+  text-cleaning:
+    remove-extra-whitespace: true
+    remove-special-characters: false
+    normalize-line-breaks: true
+    remove-sensitive-info: true
+    default-language: zh-TW
+
+  # 元資料增強配置
+  metadata-enrichment:
+    enable-basic-metadata: true
+    enable-language-detection: true
+    enable-content-statistics: true
+    enable-keyword-extraction: true
+    keyword-count: 5
+    enable-summary-generation: true
+    summary-types:
+      - CURRENT
+      - PREVIOUS
+      - NEXT
+
+  # 向量品質配置
+  vector-quality:
+    min-dimension: 384
+    max-dimension: 4096
+    min-norm: 0.1
+    max-norm: 10.0
+    quality-threshold: 0.7
+
+  # 資料安全配置
+  security:
+    enable-access-control: true
+    enable-data-masking: true
+    session-timeout: 8h
+    enable-audit-logging: true
+
+  # 企業資料源配置（使用 Neo4j 統一存儲）
+  datasources:
+    mongodb:
+      enabled: false
+    rest-api:
+      enabled: true
+    file-system:
+      enabled: true
+
+# 監控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,info
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+  health:
+    neo4j:
+      enabled: true
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.enhancement: DEBUG
+    org.springframework.ai: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/enhancement.log

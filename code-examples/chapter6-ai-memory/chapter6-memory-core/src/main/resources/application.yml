@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: chapter6-memory-core
+
+  main:
+    allow-bean-definition-overriding: true
+
+  # Spring AI 配置
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://api.openai.com/v1
+      model: gpt-4o-mini
+
+# 自定義記憶配置
+memory:
+  storage-type: memory  # 可選: memory, window, jdbc, redis
+  window-size: 50       # 滑動窗口大小
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.memory: DEBUG
+    org.springframework.ai: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+
+# 服務器配置
+server:
+  port: 8080
+  servlet:
+    context-path: /
