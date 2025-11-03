@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: mcp-client-basic
+
+  main:
+    web-application-type: none  # CLI 應用，無需Web服務器
+    banner-mode: off            # 關閉Spring Boot Banner
+
+  ai:
+    # OpenAI 配置
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4
+          temperature: 0.7
+          max-tokens: 2000
+
+    # MCP Client 配置
+    mcp:
+      client:
+        enabled: true
+        type: SYNC  # 使用同步客戶端 (McpSyncClient)
+
+        # 工具回調配置
+        # Spring AI 1.0.3 需要手動創建 ToolCallbackProvider
+        toolcallback:
+          enabled: false
+
+        # SSE 傳輸配置 (HTTP方式)
+        sse:
+          connections:
+            # Context7 MCP Server - 公開的文檔檢索服務
+            context7:
+              url: https://mcp.context7.com/mcp
+              timeout: 30000  # 30 秒超時
+              # Context7 不需要認證
+
+        # STDIO 傳輸配置 (本地進程方式)
+        # 注意：需要安裝 Node.js 和相關 MCP Server
+        stdio:
+          connections:
+            # Brave Search MCP Server (需要 BRAVE_API_KEY)
+            brave-search:
+              command: npx
+              args:
+                - -y  # 自動確認安裝
+                - "@modelcontextprotocol/server-brave-search"
+              env:
+                BRAVE_API_KEY: ${BRAVE_API_KEY:}  # 從環境變數讀取，未設置則為空
+
+          # 或使用外部配置文件 (備選方式)
+          # servers-configuration: classpath:mcp-servers.json
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.mcpclient: DEBUG
+    org.springframework.ai: DEBUG
+    io.modelcontextprotocol: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# 自定義配置
+app:
+  mcp:
+    # 是否在啟動時列出所有可用工具
+    list-tools-on-startup: true
+    # 是否在啟動時顯示 Server 信息
+    show-server-info: true

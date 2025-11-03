@@ -1,0 +1,94 @@
+# Spring AI MCP Server Advanced - 應用程式配置
+# 提示系統、自動完成、動態工具更新範例
+
+spring:
+  application:
+    name: mcp-server-advanced
+
+  # MCP Server 配置
+  ai:
+    mcp:
+      server:
+        # Server 基本資訊
+        name: advanced-server
+        version: 1.0.0
+        type: SYNC  # 使用同步模式
+
+        # 啟用變更通知
+        prompt-change-notification: true    # 提示變更通知
+        tool-change-notification: true      # 工具變更通知
+        resource-change-notification: true  # 資源變更通知
+
+        # Server 能力配置
+        capabilities:
+          prompts:
+            list-changed: true  # 支援提示列表變更通知
+          tools:
+            list-changed: true  # 支援工具列表變更通知
+          logging: {}           # 支援日誌記錄
+          sampling: {}          # 支援 Sampling
+
+  # H2 資料庫配置
+  datasource:
+    url: jdbc:h2:mem:mcpdb               # 記憶體資料庫
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: create-drop               # 每次啟動重建資料庫
+    show-sql: true                        # 顯示 SQL 語句
+    properties:
+      hibernate:
+        format_sql: true                  # 格式化 SQL
+        use_sql_comments: true            # 顯示 SQL 註解
+
+  # H2 Console 配置（開發用）
+  h2:
+    console:
+      enabled: true                       # 啟用 H2 Console
+      path: /h2-console                   # Console 路徑
+
+  # SQL 初始化配置
+  sql:
+    init:
+      mode: always                        # 總是執行初始化腳本
+      data-locations: classpath:data.sql  # 初始化數據腳本
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    org.springframework.ai: DEBUG         # Spring AI 詳細日誌
+    org.springframework.ai.mcp: DEBUG     # MCP 詳細日誌
+    com.example.mcp: DEBUG                # 應用程式詳細日誌
+    org.hibernate.SQL: DEBUG              # Hibernate SQL 日誌
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # SQL 參數日誌
+
+# Server 配置
+server:
+  port: 8081                              # Server 端口（避免與 8080 衝突）
+
+# Actuator 配置（監控和健康檢查）
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics      # 暴露的端點
+  endpoint:
+    health:
+      show-details: always                # 顯示詳細健康資訊
+
+# 應用程式自訂配置
+mcp:
+  advanced:
+    # 動態工具更新延遲（毫秒）
+    tool-update-delay: 5000
+
+    # 完成建議最大數量
+    max-completions: 10
+
+    # 提示快取時間（秒）
+    prompt-cache-ttl: 300

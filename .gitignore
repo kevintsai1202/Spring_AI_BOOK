@@ -51,6 +51,11 @@ desktop.ini
 *.bak
 *.swp
 *~
+temp_mermaid_*.mmd
+nul
+
+# Word 輸出目錄
+Word輸出/
 
 # 向量資料庫資料
 *.db

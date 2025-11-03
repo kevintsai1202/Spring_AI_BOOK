@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: mcp-server-tools-resources
+
+  # Spring AI MCP Server 配置
+  ai:
+    mcp:
+      server:
+        # Server 基本資訊
+        name: tools-resources-server
+        version: 1.0.0
+
+        # Server 類型（同步）
+        type: SYNC
+
+        # STDIO 模式開關（透過命令行參數切換）
+        # -Dspring.ai.mcp.server.stdio=true 啟用 STDIO 模式
+        # -Dspring.ai.mcp.server.stdio=false 啟用 SSE 模式（默認）
+        stdio: false
+
+        # SSE 端點配置（當 stdio=false 時使用）
+        sse-message-endpoint: /mcp/message
+
+        # 變更通知功能
+        tool-change-notification: true
+        resource-change-notification: true
+
+# 應用配置（由 ApplicationConfig 讀取）
+app:
+  name: MCP Tools & Resources Server
+  version: 1.0.0
+  features:
+    weather: true      # 天氣查詢功能
+    math: true         # 數學運算功能
+    text: true         # 文本處理功能
+    time: true         # 時間工具功能
+    user: true         # 用戶資源功能
+    config: true       # 配置資源功能
+    log: true          # 日誌資源功能
+
+# Server 端口配置（僅 SSE 模式使用）
+server:
+  port: 8080
+
+# 日誌配置
+logging:
+  level:
+    root: INFO
+    com.example.mcp: DEBUG
+    org.springframework.ai: DEBUG
+    org.springaicommunity.mcp: DEBUG
+
+  # 日誌輸出到檔案
+  file:
+    name: logs/application.log
+
+  # 日誌格式
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
